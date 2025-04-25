@@ -1,0 +1,95 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String             @id @default(uuid())
+  email            String             @unique
+  password         String
+  name             String?
+  role             Role               @default(CLIENT)
+  createdAt        DateTime           @default(now())
+  jobs             Job[]              @relation("PostedJobs")
+  orders           Order[]            @relation("UserOrders")
+  Auth             Auth[]
+  TaskManagerOffer TaskManagerOffer[]
+}
+
+model Auth {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  token     String
+  type      String
+  createdAt DateTime @default(now())
+}
+
+model Job {
+  id               String             @id @default(uuid())
+  title            String
+  description      String
+  img              String
+  postedBy         User               @relation("PostedJobs", fields: [postedById], references: [id])
+  postedById       String
+  category         Category
+  createdAt        DateTime           @default(now())
+  Order            Order[]
+  packages         JobPackage[]       @relation("JobToPackages")
+  TaskManagerOffer TaskManagerOffer[]
+}
+
+model JobPackage {
+  id          String      @id @default(uuid())
+  job         Job         @relation("JobToPackages", fields: [jobId], references: [id])
+  jobId       String
+  type        PackageType
+  price       Float
+  revisions   Int
+  description String?
+}
+
+model Order {
+  id        String   @id @default(uuid())
+  jobId     String
+  job       Job      @relation(fields: [jobId], references: [id])
+  userId    String
+  user      User     @relation("UserOrders", fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model TaskManagerOffer {
+  id           String      @id @default(uuid())
+  user         User        @relation(fields: [userId], references: [id])
+  userId       String
+  job          Job?        @relation(fields: [jobId], references: [id])
+  jobId        String?
+  type         PackageType
+  hourlyRate   Float
+}
+
+enum Role {
+  CLIENT
+  FREELANCER
+}
+
+enum Category {
+  web_development
+  mobile_development
+  ui_ux
+  graphic_design
+  copywriting
+  marketing
+  consultance
+  web3
+}
+
+enum PackageType {
+  BASIC
+  STANDARD
+  PREMIUM
+}

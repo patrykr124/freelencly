@@ -1,0 +1,38 @@
+bg-green-600
+
+
+
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      Role     @default(CLIENT)
+  createdAt DateTime @default(now())
+  jobs      Job[]    @relation("PostedJobs")
+  orders    Order[]  @relation("UserOrders")
+}
+
+model Job {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  postedBy    User     @relation("PostedJobs", fields: [postedById], references: [id])
+  postedById  String
+  createdAt   DateTime @default(now())
+}
+
+model Order {
+  id        String   @id @default(uuid())
+  job       Job      @relation(fields: [jobId], references: [id])
+  jobId     String
+  user      User     @relation("UserOrders", fields: [userId], references: [id])
+  userId    String
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  CLIENT
+  FREELANCER
+}
