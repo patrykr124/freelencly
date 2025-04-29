@@ -15,7 +15,6 @@ const useFreelencerWorkstore = create<WorkspaceStore>((set) => ({
   freelancers: [],
   addFreelancer: (freelancer) =>
     set((state) => {
-      // Unikalność po id
       if (state.freelancers.some((f) => f.id === freelancer.id)) return state;
       return { freelancers: [...state.freelancers, freelancer] };
     }),

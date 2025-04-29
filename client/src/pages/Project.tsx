@@ -9,7 +9,7 @@ export default function Project() {
   const freelancer = useFreelencerWorkstore((state) => state.freelancers);
   console.log(freelancer[0]);
   const [activeId, setActiveId] = useState<string>();
-  const active = activeId === freelancer[0].id;
+  const active = activeId === freelancer[0]?.id;
   function handleHidden() {
     setHiddenLeft((prev) => !prev);
   }
@@ -39,7 +39,7 @@ export default function Project() {
             <p className="text-white">Workspace:</p>
             <div className="space-y-2">
               {/* Przykładowe  */}
-              {freelancer.map((el: any) => (
+              {freelancer?.map((el: any) => (
                 <div
                   key={el.id}
                   className={`${
