@@ -27,8 +27,8 @@ export default function Setting() {
                 </div>
 
                 <form className="flex flex-col" onSubmit={handleSubmit}>
-                    <label htmlFor="name">Change name</label>
-                    <input placeholder={currentUser?.user?.name} value={name} onChange={(e) => setName(e.target.value)} type="text" name="name" id="name" />
+                    <label className="mb-0" htmlFor="name">Change name</label>
+                    <input className="" placeholder={currentUser?.user?.name} value={name} onChange={(e) => setName(e.target.value)} type="text" name="name" id="name" />
                     <button type="submit" className="bg-black w-full text-white px-12 py-3 rounded-xl cursor-pointer">Change</button>
                 </form>
             </div>

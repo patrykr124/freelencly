@@ -18,7 +18,9 @@ const initialColumns = {
 
 let idCounter = 0;
 
-const TaskManager: React.FC = () => {
+
+
+export default function TaskManager() {
   const [columns, setColumns] = useState(initialColumns);
   const [taskInput, setTaskInput] = useState("");
 
@@ -121,13 +123,14 @@ const TaskManager: React.FC = () => {
                     {provided.placeholder}
                   </div>
                 )}
+                
               </Droppable>
             </div>
+            
           ))}
         </DragDropContext>
       </div>
+      
     </div>
   );
 };
-
-export default TaskManager;

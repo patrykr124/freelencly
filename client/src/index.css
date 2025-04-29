@@ -24,6 +24,9 @@
   .link{
     @apply min-w-[120px] items-center justify-center text-sm flex px-6 rounded-lg text-center py-2.5  hover:scale-95 transition-all duration-200 cursor-pointer  shadow-md
   }
+  .link-small{
+    @apply w-fit items-center justify-center text-sm flex px-3 rounded-lg text-center py-2.5  hover:scale-95 transition-all font-semibold duration-200 cursor-pointer  shadow-md bg-white text-black
+  }
 
   h2{
     @apply text-5xl

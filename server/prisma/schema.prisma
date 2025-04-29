@@ -8,16 +8,17 @@ datasource db {
 }
 
 model User {
-  id               String             @id @default(uuid())
-  email            String             @unique
-  password         String
-  name             String?
-  role             Role               @default(CLIENT)
-  createdAt        DateTime           @default(now())
-  jobs             Job[]              @relation("PostedJobs")
-  orders           Order[]            @relation("UserOrders")
-  Auth             Auth[]
-  TaskManagerOffer TaskManagerOffer[]
+  id           String   @id @default(uuid())
+  email        String   @unique
+  password     String
+  name         String?
+  role         Role     @default(client)
+  createdAt    DateTime @default(now())
+  jobs         Job[]    @relation("PostedJobs")
+  orders       Order[]  @relation("UserOrders")
+  Auth         Auth[]
+  CreatedTask  Task[]   @relation("CreatedTask")
+  AssignedTask Task[]   @relation("AssignedTask")
 }
 
 model Auth {
@@ -30,17 +31,17 @@ model Auth {
 }
 
 model Job {
-  id               String             @id @default(uuid())
-  title            String
-  description      String
-  img              String
-  postedBy         User               @relation("PostedJobs", fields: [postedById], references: [id])
-  postedById       String
-  category         Category
-  createdAt        DateTime           @default(now())
-  Order            Order[]
-  packages         JobPackage[]       @relation("JobToPackages")
-  TaskManagerOffer TaskManagerOffer[]
+  id           String             @id @default(uuid())
+  title        String
+  description  String
+  img          String
+  postedBy     User               @relation("PostedJobs", fields: [postedById], references: [id])
+  postedById   String
+  category     Category
+  createdAt    DateTime           @default(now())
+  Order        Order[]
+  packages     JobPackage[]       @relation("JobToPackages")
+  taskPerHours TaskManagerOffer[] @relation("perHours")
 }
 
 model JobPackage {
@@ -53,6 +54,13 @@ model JobPackage {
   description String?
 }
 
+model TaskManagerOffer {
+  id         String  @id @default(uuid())
+  job        Job?    @relation("perHours", fields: [jobId], references: [id])
+  jobId      String?
+  hourlyRate Float
+}
+
 model Order {
   id        String   @id @default(uuid())
   jobId     String
@@ -62,19 +70,38 @@ model Order {
   createdAt DateTime @default(now())
 }
 
-model TaskManagerOffer {
-  id           String      @id @default(uuid())
-  user         User        @relation(fields: [userId], references: [id])
-  userId       String
-  job          Job?        @relation(fields: [jobId], references: [id])
-  jobId        String?
-  type         PackageType
-  hourlyRate   Float
+model Task {
+  id           String       @id @default(uuid())
+  title        String
+  description  String?
+  status       TaskStatus   @default(todo)
+  priority     TaskPriority @default(normal)
+  createdBy    User         @relation("CreatedTask", fields: [createdById], references: [id])
+  createdById  String
+  assignedTo   User?        @relation("AssignedTask", fields: [assignedToId], references: [id])
+  assignedToId String?
+  createdAt    DateTime     @default(now())
+  updateAt     DateTime     @updatedAt
+  dueDate      DateTime?
+}
+
+enum TaskStatus {
+  todo
+  in_progress
+  in_review
+  done
+}
+
+enum TaskPriority {
+  low
+  normal
+  medium
+  high
 }
 
 enum Role {
-  CLIENT
-  FREELANCER
+  client
+  freelencer
 }
 
 enum Category {

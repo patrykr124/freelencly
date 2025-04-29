@@ -9,6 +9,7 @@ type SingIn = {
 type SingUp = {
   email: string;
   password: string;
+  name: string;
 };
 
 
@@ -16,13 +17,13 @@ type SingUp = {
 export function useSignUp() {
   
   return useMutation({
-    mutationFn: async ({ email, password }: SingUp) => {
+    mutationFn: async ({ email, password,name }: SingUp) => {
       const res = await fetch("http://localhost:3000/user/auth", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password ,name}),
       });
 
       

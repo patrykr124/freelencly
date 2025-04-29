@@ -1,15 +1,17 @@
 import Header from "../components/UI/Header";
 import { Image, ScanLineIcon } from "lucide-react";
-import { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import ImageUpload from "../components/UI/ImageUpload";
 import Select from "../components/UI/Select";
-import { useCreateJob, type Input } from "../lib/useCreate";
+import {  type Input } from "../lib/useCreate";
 import useAuth from "../store/auth";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
+import { useUpdateJob } from "../lib/UpdateJob";
+import { useCurrentJobs } from "../lib/useCurrentJob";
 
-export default function Create() {
+export default function Edit() {
   const [title, setTitle] = useState("");
   const [description, setDesc] = useState("");
   const [img, setImg] = useState<File | undefined>();
@@ -30,13 +32,48 @@ export default function Create() {
   const [servicesPerHour, setServicesPerHour] = useState("yes");
   const [servicesPerHourPrice, setServicesPerHourPrice] = useState(0);
   const navigate = useNavigate();
-
+  const {id} = useParams();
+  const { data: job } = useCurrentJobs(id);
   const { token } = useAuth();
-  const createJob = useCreateJob(token ?? "");
+  const createJob = useUpdateJob(token ?? "", id ?? "");
+  console.log(job)
+
+  useEffect(() => {
+    if(job){
+      setTitle(job.title);
+      setDesc(job.description);
+      setImagePreview(`http://localhost:3000/uploads/${job.img}`);
+      setCategory(job.category);
+
+      const standardPackage = job.packages.find((el: { type: string; }) => el.type === "BASIC");
+      const mediumPackage = job.packages.find((el: { type: string; }) => el.type === "STANDARD");
+      const premiumPackage = job.packages.find((el: { type: string; })  => el.type === "PREMIUM");
+
+      if(standardPackage){
+        setStandardPrice(standardPackage.price);
+        setStandardRevision(standardPackage.revisions);
+        setStandardDesc(standardPackage.description);
+      }
+
+      if(mediumPackage){
+        setMediumPrice(mediumPackage.price);
+        setMediumRevision(mediumPackage.revisions);
+        setMediumDesc(mediumPackage.description);
+      }
+
+      if(premiumPackage){
+        setPremiumPrice(premiumPackage.price);
+        setPremiumRevision(premiumPackage.revisions);
+        setPremiumDesc(premiumPackage.description);
+      }
+     
+      setServicesPerHour("yes");
+      setServicesPerHourPrice(job.taskPerHours[0]?.hourlyRate);
+    }
+  },[job])
 
   function handleSend(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log("Hi");
     const input: Input = {
       title,
       img,
@@ -55,13 +92,13 @@ export default function Create() {
     };
     createJob.mutate(input, {
       onSuccess: (data) => {
-        navigate("/");
+        navigate(`/services/${category}/${id}`);
         console.log(data);
         setSucess("Udało się!");
       },
 
       onError: (error) => {
-        console.error("Błąd w create.tsx", error);
+        console.error("Błąd w edit.tsx", error);
       },
     });
   }
@@ -279,7 +316,7 @@ export default function Create() {
             type="submit"
             className="bg-black text-white px-12 py-3 rounded-xl cursor-pointer"
           >
-            Send
+            Edit
           </button>
         </form>
       </div>

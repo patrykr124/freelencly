@@ -5,7 +5,11 @@ export interface BoxServicesProps {
   title: string;
   description: string;
   packages: { price: number, type: string, description: string, revisions: number }[];
-  postedBy: { name: string };
+  postedBy: { name: string, id: string };
+  taskPerHours: { hourlyRate: number }[];
+  name: string;
+  hourlyRate: number;
+  price: number;
 }
 
 export interface Job{

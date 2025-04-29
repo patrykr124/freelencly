@@ -12,17 +12,20 @@ interface pops {
 
 export default function SignIn({ showSigninEmail, setShowSigninEmail }: pops) {
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const singInMutation = useSignUp();
   const loginAuth = useAuth((state) => state.login);
   const { togglePopup } = closePopup();
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [usernameError, setUsernameError] = useState("");
+  
   function handleShowSigninEmail(e: React.MouseEvent) {
     e.stopPropagation();
     setShowSigninEmail(!showSigninEmail);
   }
-
+  
   function handleSingIn(e: React.MouseEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
@@ -33,15 +36,17 @@ export default function SignIn({ showSigninEmail, setShowSigninEmail }: pops) {
       }
       if (!password) {
         setPasswordError("Password is required");
-      } else if (password.length < 8) {
-        setPasswordError("Password must have more than 8 word!");
+      } else if (password.length < 6) {
+        setPasswordError("Password must have more than 6 word!");
       }
-
+      if (!name) {
+        setUsernameError("Username neccessary");
+      }
       singInMutation.mutate(
-        { email, password },
+        { email, password, name },
         {
-          onSuccess: (data: { id: string; email: string; token: string }) => {
-            loginAuth({ id: data.id, email: data.email }, data.token);
+          onSuccess: (data: { id: string; email: string; name: string; token: string }) => {
+            loginAuth({ id: data.id, email: data.email, name:data.name }, data.token);
             console.log("Rejestracja się udała!", data);
             localStorage.setItem("token", data.token);
             togglePopup(false);
@@ -79,7 +84,22 @@ export default function SignIn({ showSigninEmail, setShowSigninEmail }: pops) {
                 placeholder="E-mail"
                 className="mt-1.5 border-[1px]   w-full p-1.5 rounded-lg "
               />
-              {emailError && <p className="text-red-500 m-0 -mt-2 mb-2">{emailError}</p>}
+              {emailError && (
+                <p className="text-red-500 m-0 -mt-2 mb-2">{emailError}</p>
+              )}
+
+              <label htmlFor="name">Name</label>
+              <input
+                type="text"
+                onChange={(e) => setName(e.target.value)}
+                value={name}
+                id="name"
+                placeholder="Name"
+                className="mt-1.5 border-[1px] w-full p-1.5 rounded-lg "
+              />
+              {usernameError && (
+                <p className="text-red-500 m-0 -mt-2 mb-2">{usernameError}</p>
+              )}
 
               <label htmlFor="password">Password</label>
               <input
@@ -90,7 +110,9 @@ export default function SignIn({ showSigninEmail, setShowSigninEmail }: pops) {
                 placeholder="Password"
                 className="mt-1.5 border-[1px] w-full p-1.5 rounded-lg "
               />
-              {passwordError && <p className="text-red-500 m-0 -mt-2 mb-2">{passwordError}</p>}
+              {passwordError && (
+                <p className="text-red-500 m-0 -mt-2 mb-2">{passwordError}</p>
+              )}
 
               <button type="submit" className="submit">
                 Login

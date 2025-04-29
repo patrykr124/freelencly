@@ -5,7 +5,7 @@ const { generateTokken } = require("../middleware/token");
 
 const signUp = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password,name } = req.body;
     const existingUser = await prisma.user.findUnique({
       where: {
         email,
@@ -23,14 +23,16 @@ const signUp = async (req, res) => {
       data: {
         email,
         password: hashPassword,
+        name
       },
     });
     if (newUser) {
-      generateTokken(newUser.id, res);
+      const token = generateTokken(newUser.id, res);
       res.status(200).json({
         id: newUser.id,
         email: newUser.email,
-        token: generateTokken(newUser.id, res),
+        name: newUser.name,
+        token: token,
       });
     } else {
       res.status(400).json({
@@ -45,7 +47,7 @@ const signUp = async (req, res) => {
 
 const singIn = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, name } = req.body;
     if (!email || !password) {
       return res.status(400).json({ message: "Please fill all the fields" });
     }
@@ -68,6 +70,7 @@ const singIn = async (req, res) => {
       id: user.id,
       email: user.email,
       token,
+      name,
     });
   } catch (error) {
     console.log(error);

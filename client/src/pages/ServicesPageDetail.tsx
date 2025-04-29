@@ -5,9 +5,11 @@ import Avatar from "../components/layout/services_details/Avatar";
 import Review from "../components/layout/services_details/Review";
 import Offer from "../components/layout/services_details/Offer";
 
+
 export default function ServicesPageDetail() {
   const { id } = useParams();
   const { data: job, isLoading } = useCurrentJobs(id);
+  
 
   return (
     <>
@@ -42,6 +44,7 @@ export default function ServicesPageDetail() {
           <div className="wrapper details grid grid-cols-3 gap-12 py-20 ">
             <div className="col-span-2 gap-6 flex flex-col ">
               <Avatar job={job} />
+
               <h2 className="text-4xl font-semibold mt-8">{job?.title}</h2>
               <div className=""></div>
               <div className="review">
@@ -51,7 +54,7 @@ export default function ServicesPageDetail() {
                 <div dangerouslySetInnerHTML={{ __html: job?.description }} />
               </div>
             </div>
-            <div className="">
+            <div className="relative">
              <Offer job={job}/>
             </div>
           </div>
