@@ -1,4 +1,5 @@
-import useFreelencerWorkstore from "../../../store/useFreelencerWorkstore";
+import useAuth from "../../../store/auth";
+import { useManagmentTask } from "../../../lib/useManagmentTask";
 import { Job } from "@/types/box_services_props";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -7,8 +8,29 @@ export default function Offer({ job }: Job) {
   const [active, setActive] = useState<number>(1);
   const data = job.packages;
   const navigate = useNavigate();
-  const addFreelencer = useFreelencerWorkstore((state) => state.addFreelancer)
-  console.log(job)
+  const { token } = useAuth();
+  const managmentFreelencer = useManagmentTask(token ?? "");
+  function handleManagmentFreelencer() {
+    managmentFreelencer.mutate(
+      {
+        userId: job.postedBy.id,
+      },
+      {
+        onSuccess: (data) => {
+          if (data && data.id) {
+            navigate(`/project/${job.id}`);
+          }
+          console.log(data);
+          navigate(`/project/${job.id}`);
+        },
+
+        onError: (error) => {
+          console.error("Błąd w create.tsx", error);
+        },
+      }
+    );
+  }
+
   return (
     <div className="">
       <div className="border-[1px] overflow-hidden -mt-40 z-[9] bg-white shadow-xl border-black/20 rounded-md min-h-[200px] sticky top-20 ">
@@ -115,14 +137,12 @@ export default function Offer({ job }: Job) {
       <div className="border-[1px] p-2  bg-white shadow-xl border-black/20 rounded-md sticky mt-2 ">
         {job?.taskPerHours[0] && (
           <>
-            <button onClick={() => {
-              addFreelencer({
-                id: job.id,
-                name: job.postedBy.name,
-                hourlyRate: job.taskPerHours[0].hourlyRate,
-              });
-              navigate(`/project/${job.id}`)
-            }} className="link w-full bg-black text-white">
+            <button
+              onClick={() => {
+                handleManagmentFreelencer();
+              }}
+              className="link w-full bg-black text-white"
+            >
               {job.taskPerHours[0] && job.taskPerHours[0].hourlyRate} zł/h
             </button>
             <p className="text-xs  p-1.5">

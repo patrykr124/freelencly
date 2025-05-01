@@ -1,19 +1,19 @@
-import useFreelencerWorkstore from "../store/useFreelencerWorkstore";
 import TaskManager from "../components/layout/project/TaskManager";
-import Button from "../components/UI/Buttons/Button";
 import { ArrowBigLeftDash, ArrowBigRightDash } from "lucide-react";
 import { useState } from "react";
+import { Freelancer } from "@/types/box_services_props";
+import { useCurrentManagment } from "../lib/useCurrentManagment";
 
 export default function Project() {
   const [hiddenLeft, setHiddenLeft] = useState<boolean>();
-  const freelancer = useFreelencerWorkstore((state) => state.freelancers);
-  console.log(freelancer[0]);
-  const [activeId, setActiveId] = useState<string>();
-  const active = activeId === freelancer[0]?.id;
+
   function handleHidden() {
     setHiddenLeft((prev) => !prev);
   }
-
+  const [active, setActive] = useState<string>();
+  const { data: freelancer } = useCurrentManagment();
+  const currentActive = freelancer?.find((el: Freelancer) => el.id === active);
+  console.log(freelancer)
   return (
     <section className="flex bg-gray-db">
       <div
@@ -28,25 +28,22 @@ export default function Project() {
             <ArrowBigLeftDash onClick={handleHidden} color="white" size={30} />
           )}
         </div>
-        {!hiddenLeft && (
-          <div className="flex items-center justify-center">
-            <Button color="bg-white w-full">Create a workspace</Button>
-          </div>
-        )}
+
         <hr className="border-t-1 border-white/40" />
         {!hiddenLeft && (
           <div className="flex flex-col gap-6">
             <p className="text-white">Workspace:</p>
             <div className="space-y-2">
               {/* Przykładowe  */}
-              {freelancer?.map((el: any) => (
+              {freelancer?.map((el: Freelancer) => (
                 <div
+                  onClick={() => setActive(el.id)}
                   key={el.id}
                   className={`${
-                    active === el.id ? "bg-neutral-600" : "bg-white/15"
+                    currentActive === el.id ? "bg-neutral-600" : "bg-white/15"
                   }  p-2 rounded-md cursor-pointer`}
                 >
-                  <p className="text-white">{el.name} project</p>
+                  <p className="text-white">{el.user.name} project</p>
                 </div>
               ))}
             </div>
@@ -58,12 +55,19 @@ export default function Project() {
           <p className="text-white"></p>
         </div>
         <div className="p-4">
-          <TaskManager />
+          {freelancer && freelancer.length > 0 && (
+            <TaskManager
+              taskManagerOfferId={freelancer[0].taskManagerOfferId}
+              freelencerId={freelancer[0].id}
+            />
+          )}
         </div>
-        <div className="absolute wrapper bottom-0 items-center justify-center flex flex-col left-0 w-full h-14 border-t-[1px] border-white/10 z-[9999]">
-          <div className="flex p-2 w-full gap-10  h-full items-center justify-end">
+        <div className="absolute bottom-0 items-center justify-center flex flex-col right-0 w-full h-14 border-t-[1px] border-white/10 z-[9999]">
+          <div className="flex wrapper p-2 w-full gap-10  h-full items-center justify-end">
             <button className="link-small">Add a budget</button>
-            <p className="text-white">Your budget: <span className="font-semibold">200 zł</span></p>
+            <p className="text-white">
+              Your budget: <span className="font-semibold">200 zł</span>
+            </p>
           </div>
         </div>
       </div>

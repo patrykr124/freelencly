@@ -8,17 +8,18 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(uuid())
-  email        String   @unique
+  id           String       @id @default(uuid())
+  email        String       @unique
   password     String
   name         String?
-  role         Role     @default(client)
-  createdAt    DateTime @default(now())
-  jobs         Job[]    @relation("PostedJobs")
-  orders       Order[]  @relation("UserOrders")
+  role         Role         @default(client)
+  createdAt    DateTime     @default(now())
+  jobs         Job[]        @relation("PostedJobs")
+  orders       Order[]      @relation("UserOrders")
   Auth         Auth[]
-  CreatedTask  Task[]   @relation("CreatedTask")
-  AssignedTask Task[]   @relation("AssignedTask")
+  CreatedTask  Task[]       @relation("CreatedTask")
+  AssignedTask Task[]       @relation("AssignedTask")
+  Freelencer   Freelencer[]
 }
 
 model Auth {
@@ -44,6 +45,14 @@ model Job {
   taskPerHours TaskManagerOffer[] @relation("perHours")
 }
 
+model Freelencer {
+  id     String             @id @default(uuid())
+  user   User               @relation(fields: [userId], references: [id])
+  userId String             @unique
+  task   Task[]             @relation("FreelencerTasks")
+  offers TaskManagerOffer[] @relation("offers")
+}
+
 model JobPackage {
   id          String      @id @default(uuid())
   job         Job         @relation("JobToPackages", fields: [jobId], references: [id])
@@ -55,10 +64,13 @@ model JobPackage {
 }
 
 model TaskManagerOffer {
-  id         String  @id @default(uuid())
-  job        Job?    @relation("perHours", fields: [jobId], references: [id])
-  jobId      String?
-  hourlyRate Float
+  id           String      @id @default(uuid())
+  job          Job?        @relation("perHours", fields: [jobId], references: [id])
+  jobId        String?
+  hourlyRate   Float
+  Freelencer   Freelencer? @relation("offers", fields: [freelencerId], references: [id])
+  freelencerId String?
+  Task         Task[]
 }
 
 model Order {
@@ -71,18 +83,22 @@ model Order {
 }
 
 model Task {
-  id           String       @id @default(uuid())
-  title        String
-  description  String?
-  status       TaskStatus   @default(todo)
-  priority     TaskPriority @default(normal)
-  createdBy    User         @relation("CreatedTask", fields: [createdById], references: [id])
-  createdById  String
-  assignedTo   User?        @relation("AssignedTask", fields: [assignedToId], references: [id])
-  assignedToId String?
-  createdAt    DateTime     @default(now())
-  updateAt     DateTime     @updatedAt
-  dueDate      DateTime?
+  id                 String            @id @default(uuid())
+  title              String
+  description        String?
+  status             TaskStatus        @default(todo)
+  priority           TaskPriority      @default(normal)
+  createdBy          User              @relation("CreatedTask", fields: [createdById], references: [id])
+  createdById        String
+  assignedTo         User?             @relation("AssignedTask", fields: [assignedToId], references: [id])
+  assignedToId       String?
+  createdAt          DateTime          @default(now())
+  updateAt           DateTime          @updatedAt
+  dueDate            DateTime?
+  Freelencer         Freelencer?       @relation("FreelencerTasks", fields: [freelencerId], references: [id])
+  freelencerId       String?
+  TaskManagerOffer   TaskManagerOffer? @relation(fields: [taskManagerOfferId], references: [id])
+  taskManagerOfferId String?
 }
 
 enum TaskStatus {

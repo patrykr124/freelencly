@@ -113,4 +113,34 @@ const currentUser = async (req, res) => {
   }
 };
 
-module.exports = { signUp, singIn, updateUser, currentUser };
+const getMe  = async (req, res) => {
+  const userId = req.userId;
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        CreatedTask: true,
+        AssignedTask: true,
+        jobs: true,
+        orders: true,
+        Auth: true,
+        Freelencer: {
+          include: {
+            task: true,
+            offers: true,
+          }
+        },
+      },
+    });
+    if(user){
+      delete user.password
+    }
+    res.status(200).json({
+      user,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+module.exports = { signUp, singIn, updateUser, currentUser,getMe };
