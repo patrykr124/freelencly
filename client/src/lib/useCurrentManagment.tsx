@@ -15,7 +15,7 @@ export function useCurrentManagment(){
                 throw new Error(error.message);
             }
 
-            return res.json();
+            return res.json() || [];
         }
     })
 }

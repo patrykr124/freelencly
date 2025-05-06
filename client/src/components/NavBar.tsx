@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../store/auth";
 import closePopup from "../store/closePopup";
 import Button from "./UI/Buttons/Button";
@@ -6,12 +6,14 @@ import ButtonPopup from "./UI/Buttons/ButtonPopup";
 
 import { useFullUser } from "../lib/useMyData";
 import { useEffect, useState } from "react";
+import { useJobs } from "../lib/useAllJobs";
 
 export default function NavBar() {
   const { isAuth } = useAuth();
   const logOut = useAuth((state) => state.logout);
-  const { togglePopup } = closePopup();
+  const togglePopup = closePopup((state) => state.togglePopup);
   const { pathname } = useLocation();
+  const { data: job } = useJobs();
   const [showTask, setShowTask] = useState(false);
   let css = "";
   if (pathname.includes("/project")) {
@@ -25,16 +27,21 @@ export default function NavBar() {
   function logout() {
     logOut();
     togglePopup(false);
+
     navigate("/");
+    window.location.reload();
   }
 
   const { data: dataUser } = useFullUser();
-  console.log(dataUser)
   useEffect(() => {
     if (dataUser?.user && dataUser.user?.CreatedTask.length > 0) {
       setShowTask(true);
     }
   }, [dataUser]);
+
+  function handleNavigate() {
+    navigate(`/project/${job?.[0].id}`);
+  }
 
   return (
     <header
@@ -50,17 +57,28 @@ export default function NavBar() {
           </a>
         </div>
         <div className=" flex gap-4">
-          <Link className="text-sm link bg-white" to="/create">
-            Create a offer
-          </Link>
+          {!isAuth && (
+            <ButtonPopup
+              color="text-sm link bg-white w-[150px]"
+              onClick={() => togglePopup(true)}
+            >
+              Create a offer
+            </ButtonPopup>
+          )}
+
           {showTask && (
-            <Button onClick={() => navigate("/project")} color="bg-white">
+            <Button onClick={handleNavigate} color="bg-white">
               Task managment
             </Button>
           )}
           {isAuth ? (
             <>
-              {" "}
+              <Button
+                color="text-sm  link bg-white w-[150px]"
+                onClick={() => navigate("/create")}
+              >
+                Create a offer
+              </Button>{" "}
               <Button onClick={() => navigate("/setting")} color="bg-white">
                 Setting
               </Button>

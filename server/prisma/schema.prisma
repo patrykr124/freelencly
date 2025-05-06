@@ -16,20 +16,21 @@ model User {
   createdAt    DateTime     @default(now())
   jobs         Job[]        @relation("PostedJobs")
   orders       Order[]      @relation("UserOrders")
-  Auth         Auth[]
+  // Auth         Auth[]
   CreatedTask  Task[]       @relation("CreatedTask")
   AssignedTask Task[]       @relation("AssignedTask")
   Freelencer   Freelencer[]
+  googleId     String?      @unique
 }
 
-model Auth {
-  id        String   @id @default(uuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  token     String
-  type      String
-  createdAt DateTime @default(now())
-}
+// model Auth {
+//   id        String   @id @default(uuid())
+//   userId    String
+//   user      User     @relation(fields: [userId], references: [id])
+//   token     String
+//   type      String
+//   createdAt DateTime @default(now())
+// }
 
 model Job {
   id           String             @id @default(uuid())

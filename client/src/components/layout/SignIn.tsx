@@ -4,6 +4,8 @@ import { FaEnvelope } from "react-icons/fa";
 import { useSignUp } from "../../lib/useSignIn";
 import useAuth from "../../store/auth";
 import closePopup from "../../store/closePopup";
+import { GoogleLogin } from "@react-oauth/google";
+import { useGoogleLogin } from "../../lib/useGoogleLogin";
 
 interface pops {
   showSigninEmail: boolean;
@@ -20,12 +22,13 @@ export default function SignIn({ showSigninEmail, setShowSigninEmail }: pops) {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [usernameError, setUsernameError] = useState("");
-  
+  const googleLogin = useGoogleLogin();
+  const isAuth = useAuth((state) => state.isAuth);
   function handleShowSigninEmail(e: React.MouseEvent) {
     e.stopPropagation();
     setShowSigninEmail(!showSigninEmail);
   }
-  
+
   function handleSingIn(e: React.MouseEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
@@ -45,8 +48,16 @@ export default function SignIn({ showSigninEmail, setShowSigninEmail }: pops) {
       singInMutation.mutate(
         { email, password, name },
         {
-          onSuccess: (data: { id: string; email: string; name: string; token: string }) => {
-            loginAuth({ id: data.id, email: data.email, name:data.name }, data.token);
+          onSuccess: (data: {
+            id: string;
+            email: string;
+            name: string;
+            token: string;
+          }) => {
+            loginAuth(
+              { id: data.id, email: data.email, name: data.name },
+              data.token
+            );
             console.log("Rejestracja się udała!", data);
             localStorage.setItem("token", data.token);
             togglePopup(false);
@@ -127,8 +138,43 @@ export default function SignIn({ showSigninEmail, setShowSigninEmail }: pops) {
         <div className="flex flex-col justify-center w-full  gap-8">
           <div className="space-y-2">
             <div className="border-[1px] hover:bg-black/10 cursor-pointer flex items-center  justify-center gap-4 px-4 rounded-lg border-black/30 py-2 w-full">
-              <img className="w-4 h-4" src="/img/google.svg" /> Sing in with
-              Google{" "}
+              {isAuth ? (
+                <p>Zalogowany</p>
+              ) : (
+                <GoogleLogin
+                  onSuccess={(credentialResponse) => {
+                    if (credentialResponse.credential) {
+                      googleLogin.mutate(credentialResponse.credential, {
+                        onSuccess: (data: {
+                          id: string;
+                          email: string;
+                          name: string;
+                          token: string;
+                        }) => {
+                          loginAuth(
+                            { id: data.id, email: data.email, name: data.name },
+                            data.token
+                          );
+                          console.log("Rejestracja się udała!", data);
+                          localStorage.setItem("token", data.token);
+                          togglePopup(false);
+                        },
+                        onError: (error: { message: string }) => {
+                          console.log(error);
+                        },
+                      });
+                    }
+                  }}
+                  onError={() => {
+                    alert("Google login failed");
+                  }}
+                />
+              )}
+              {googleLogin.isError && (
+                <p className="text-red-500 mt-2">
+                  {googleLogin.error?.message}
+                </p>
+              )}
             </div>
             <button
               onClick={handleShowSigninEmail}

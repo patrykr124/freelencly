@@ -11,8 +11,8 @@ export default function Avatar({ job }: Job) {
     navigate(`/edit/${job?.id}`);
   };
   return (
-    <div className="flex jus-end items-center gap-4  h-[200px] -mt-40 z-10 ">
-      <div className="w-2/3 bg-white shadow-xl  rounded-lg p-4">
+    <div className="flex jus-end items-start gap-4  h-[200px] -mt-40 z-10 ">
+      <div className="w-2/3 flex gap-4 bg-white rounded shadow-xl px-4 py-12">
         <img className="rounded-full bg-black/20 w-20 h-20" />
         <div className="flex flex-col items-start">
           <div className="flex items-center gap-2">
@@ -32,7 +32,10 @@ export default function Avatar({ job }: Job) {
       <div className="fixed bottom-0 right-0 bg-white h-12 py-7 shadow-md border-[1px] z-[9999] w-screen flex items-center justify-center">
         {ownerJob && (
           <div className="flex wrapper justify-end">
-            <button onClick={handleEdit} className="bg-green-600 text-white py-2  px-4 rounded">
+            <button
+              onClick={handleEdit}
+              className="bg-green-600 text-white py-2  px-4 rounded"
+            >
               Edit
             </button>
           </div>

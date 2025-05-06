@@ -14,6 +14,9 @@ export default function Project() {
   const { data: freelancer } = useCurrentManagment();
   const currentActive = freelancer?.find((el: Freelancer) => el.id === active);
   console.log(freelancer)
+  if (!freelancer || freelancer.length === 0) {
+    return <div>No freelancers found</div>;
+  }
   return (
     <section className="flex bg-gray-db">
       <div
@@ -63,7 +66,7 @@ export default function Project() {
           )}
         </div>
         <div className="absolute bottom-0 items-center justify-center flex flex-col right-0 w-full h-14 border-t-[1px] border-white/10 z-[9999]">
-          <div className="flex wrapper p-2 w-full gap-10  h-full items-center justify-end">
+          <div className="flex p-4 w-full gap-10  h-full items-center justify-end">
             <button className="link-small">Add a budget</button>
             <p className="text-white">
               Your budget: <span className="font-semibold">200 zł</span>

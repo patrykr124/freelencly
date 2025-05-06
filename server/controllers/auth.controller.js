@@ -2,6 +2,7 @@ const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcrypt");
 const prisma = new PrismaClient();
 const { generateTokken } = require("../middleware/token");
+const { OAuth2Client } = require('google-auth-library');
 
 const signUp = async (req, res) => {
   try {
@@ -123,7 +124,7 @@ const getMe  = async (req, res) => {
         AssignedTask: true,
         jobs: true,
         orders: true,
-        Auth: true,
+        // Auth: true,
         Freelencer: {
           include: {
             task: true,
@@ -143,4 +144,53 @@ const getMe  = async (req, res) => {
   }
 }
 
-module.exports = { signUp, singIn, updateUser, currentUser,getMe };
+
+const googleLogin = async (req, res )=>{
+  
+
+  try {
+    const {credential} = req.body;
+    const client  = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
+
+    const ticket = await client.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID
+    })
+    const payload = ticket.getPayload();
+    const {email, name, sub} = payload;
+
+    let user = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    })
+
+    if(!user){
+      user = await prisma.user.create({
+        data: {
+          email,
+          name,
+          password: "",
+          googleId: sub
+        },
+      })
+    } else if (!user.googleId){
+      user = await prisma.user.update({
+        where: { id: user.id },
+        data: { googleId: sub },
+      });
+    }
+    const token = generateTokken(user.id, res);
+    res.status(200).json({
+      id: user.id,
+      email: user.email,
+      token,
+      name,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+}
+
+module.exports = { signUp, singIn, updateUser, currentUser,getMe,googleLogin };

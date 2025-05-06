@@ -7,7 +7,7 @@ interface PopupState {
 
 const closePopup = create<PopupState>((set) => ({
     isPopup: false,
-   togglePopup: (value?:boolean ) => set(state => ({isPopup: value ?? !state.isPopup}))
+    togglePopup: (value?:boolean ) => set(state => ({isPopup: value ?? !state.isPopup}))
 }))
 
 

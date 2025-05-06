@@ -31,13 +31,15 @@ export default function Offer({ job }: Job) {
     );
   }
 
+  const cssBox = " flex gap-3  flex-col justify-between w-full h-full min-h-[150px] ";
+
   return (
     <div className="">
-      <div className="border-[1px] overflow-hidden -mt-40 z-[9] bg-white shadow-xl border-black/20 rounded-md min-h-[200px] sticky top-20 ">
+      <div className="rounded overflow-hidden -mt-40 z-[9] bg-white  min-h-[200px] sticky top-20 ">
         <div className="flex items-center justify-around">
           <div
             onClick={() => setActive(1)}
-            className={`border-[1px] w-full p-4 flex justify-center ${
+            className={`border-[1px] w-full cursor-pointer p-4 flex justify-center ${
               active === 1 ? "shadow-sm" : "bg-black/10"
             } `}
           >
@@ -45,7 +47,7 @@ export default function Offer({ job }: Job) {
           </div>
           <div
             onClick={() => setActive(2)}
-            className={`border-[1px] w-full p-4 flex justify-center ${
+            className={`border-[1px] w-full cursor-pointer p-4 flex justify-center ${
               active === 2 ? "shadow-sm" : "bg-black/10"
             } `}
           >
@@ -53,16 +55,16 @@ export default function Offer({ job }: Job) {
           </div>
           <div
             onClick={() => setActive(3)}
-            className={`border-[1px] w-full p-4 flex justify-center ${
+            className={`border-[1px] w-full cursor-pointer p-4 flex justify-center ${
               active === 3 ? "shadow-sm" : "bg-black/10"
             } `}
           >
             <p>PREMIUM</p>
           </div>
         </div>
-        <div className="p-3 justify-center   mt-2 relative flex flex-col min-h-[250px] ">
+        <div className="p-3 justify-center   mt-2 relative flex flex-col min-h-[150px] ">
           {active === 1 && (
-            <div className="flex  gap-3  flex-col justify-between w-full min-h-[250px]">
+            <div className={`${cssBox}`}>
               <div className="desc">
                 <p className="whitespace-pre-line overflow-y-auto max-h-[360px] ">
                   {data[0]?.description}
@@ -87,7 +89,7 @@ export default function Offer({ job }: Job) {
             </div>
           )}
           {active === 2 && (
-            <div className="flex gap-3  flex-col justify-center w-full h-full">
+            <div className={`${cssBox}`}>
               <div className="desc">
                 <p className="whitespace-pre-line overflow-y-auto max-h-[360px]">
                   {data[1]?.description}
@@ -110,7 +112,7 @@ export default function Offer({ job }: Job) {
             </div>
           )}
           {active === 3 && (
-            <div className="flex gap-3 flex-col justify-center w-full h-full">
+            <div className={`${cssBox}`}>
               <div className="desc">
                 <p className="whitespace-pre-line overflow-y-auto max-h-[360px]">
                   {data[2]?.description}

@@ -11,6 +11,7 @@ import { useAddTaskSocket } from "../../../lib/useAddTaskSocket";
 import useAuth from "../../../store/auth";
 import { useAllTaskByFreelencer } from "../../../lib/useAllTaskByFreelencer";
 import { useParams } from "react-router-dom";
+import { Task } from "@/types/box_services_props";
 
 const initialColumns = {
   todo: {
@@ -36,38 +37,50 @@ export default function TaskManager({
   freelencerId?: string | null;
   taskManagerOfferId?: string | null;
 }) {
-  const [columns, setColumns] = useState(initialColumns);
+  type ColumnItem = { id: string; content: string };
+
+  type Columns = {
+    todo: { name: string; items: ColumnItem[] };
+    inprogress: { name: string; items: ColumnItem[] };
+    done: { name: string; items: ColumnItem[] };
+  };
+  const [columns, setColumns] = useState<Columns>(initialColumns);
   const [taskInput, setTaskInput] = useState("");
-  const {id} = useParams()
-  const { data: task, isLoading, error } = useAllTaskByFreelencer( id ?? "");
-  console.log(task)
+  const { id } = useParams();
+  const { data: task, isLoading, error } = useAllTaskByFreelencer(id ?? "");
+  console.log(task);
 
-
-  function mapTasksToColumns(tasks) {
+  function mapTasksToColumns(tasks: Task[]) {
     return {
       todo: {
         name: "To do",
-        items: tasks.filter((t) => t.status === "todo").map((t) => ({
-          id: t.id,
-          content: t.title,
-          ...t,
-        })),
+        items: tasks
+          .filter((t) => t.status === "todo")
+          .map((t) => ({
+            ...t,
+            content: t.title,
+            ...t,
+          })),
       },
       inprogress: {
         name: "In Progress",
-        items: tasks.filter((t) => t.status === "in_progress").map((t) => ({
-          id: t.id,
-          content: t.title,
-          ...t,
-        })),
+        items: tasks
+          .filter((t) => t.status === "in_progress")
+          .map((t) => ({
+            ...t,
+            content: t.title,
+            ...t,
+          })),
       },
       done: {
         name: "Done",
-        items: tasks.filter((t) => t.status === "done").map((t) => ({
-          id: t.id,
-          content: t.title,
-          ...t,
-        })),
+        items: tasks
+          .filter((t) => t.status === "done")
+          .map((t) => ({
+            ...t,
+            content: t.title,
+            ...t,
+          })),
       },
     };
   }
@@ -77,7 +90,6 @@ export default function TaskManager({
       setColumns(mapTasksToColumns(task));
     }
   }, [task]);
-
 
   const onDragEnd = (result: DropResult) => {
     if (!result.destination) return;
@@ -179,42 +191,48 @@ export default function TaskManager({
               >
                 <h2 className="text-lg font-bold text-white ">{col.name}</h2>
                 <hr className="border-white/40" />
-                <Droppable droppableId={colId}>
-                  {(provided, snapshot) => (
-                    <div
-                      onClick={openPopup}
-                      ref={provided.innerRef}
-                      {...provided.droppableProps}
-                      className={`flex flex-col gap-3 min-h-[50px] ${
-                        snapshot.isDraggingOver ? "bg-white" : ""
-                      }`}
-                    >
-                      {col.items.map((item, idx) => (
-                        <Draggable
-                          key={item.id}
-                          draggableId={item.id}
-                          index={idx}
-                        >
-                          {(provided, snapshot) => (
-                            <div
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                              className={`bg-white rounded-md p-3 shadow text-black font-medium cursor-pointer transition border border-blue-200 ${
-                                snapshot.isDragging
-                                  ? "ring-2 ring-green-600"
-                                  : ""
-                              }`}
-                            >
-                              {item.content}
-                            </div>
-                          )}
-                        </Draggable>
-                      ))}
-                      {provided.placeholder}
-                    </div>
-                  )}
-                </Droppable>
+                {error ? (
+                  <p>Something wrong</p>
+                ) : isLoading ? (
+                  <p>Loading...</p>
+                ) : (
+                  <Droppable droppableId={colId}>
+                    {(provided, snapshot) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.droppableProps}
+                        className={`flex flex-col gap-3 min-h-[50px] ${
+                          snapshot.isDraggingOver ? "bg-white" : ""
+                        }`}
+                      >
+                        {col.items.map((item, idx) => (
+                          <Draggable
+                            key={item.id}
+                            draggableId={item.id}
+                            index={idx}
+                          >
+                            {(provided, snapshot) => (
+                              <div
+                                onClick={openPopup}
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                className={`bg-white rounded-md p-3 shadow text-black font-medium cursor-pointer transition border border-blue-200 ${
+                                  snapshot.isDragging
+                                    ? "ring-2 ring-green-600"
+                                    : ""
+                                }`}
+                              >
+                                {item.content}
+                              </div>
+                            )}
+                          </Draggable>
+                        ))}
+                        {provided.placeholder}
+                      </div>
+                    )}
+                  </Droppable>
+                )}
               </div>
             ))}
           </DragDropContext>

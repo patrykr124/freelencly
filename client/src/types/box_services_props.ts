@@ -17,6 +17,21 @@ export interface BoxServicesProps {
   price: number;
 }
 
+export interface BoxServicesOne{
+  id: string;
+  category: string;
+  img: string;
+  title: string;
+  description?: string;
+  packages: {
+    price: number;
+    type: string;
+    description: string;
+    revisions: number;
+  }[];
+  postedBy: { name: string; id: string };
+}
+
 export interface Job {
   job: BoxServicesProps;
 }
@@ -45,3 +60,13 @@ export interface TaskInput{
   freelencerId: string;
   taskManagerOfferId: string | undefined;
 };
+
+export interface Task {
+  id:string;
+  title: string;
+  status: "todo" | "in_progress" | "done";
+  priority: "low" | "medium" | "high";
+  createdById: string;
+  assignedToId: string;
+  dueDate: string;
+}

@@ -11,7 +11,7 @@
 
 @layer base {
   body{
-    @apply font-display
+    @apply font-display overflow-x-hidden
   }
   p{
     @apply leading-normal
@@ -19,6 +19,10 @@
 
   .wrapper{
     @apply max-w-7xl mx-auto px-4 2xl:px-0 w-full
+  }
+  
+  .rounded{
+    @apply  border-[1px] shadow-xl border-black/20 rounded-md
   }
 
   .link{
