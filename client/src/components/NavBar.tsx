@@ -16,6 +16,7 @@ export default function NavBar() {
   const { data: job } = useJobs();
   const [showTask, setShowTask] = useState(false);
   let css = "";
+  
   if (pathname.includes("/project")) {
     css = " p-2 ";
   } else {
