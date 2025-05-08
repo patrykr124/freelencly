@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 services:
   postgres:
     image: postgres:15
@@ -11,6 +11,16 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+
+  backend: # Indented under services
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgres://admin:admin@postgres:5432/freelencly
+    depends_on:
+      - postgres
+    command: sh -c "npx prisma migrate deploy && npm run start"
 
 volumes:
   pgdata:
