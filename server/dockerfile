@@ -2,7 +2,6 @@ FROM node:18
 
 # Tworzymy nie-rootowego użytkownika
 RUN useradd --user-group --create-home --shell /bin/false appuser
-
 # Ustawiamy katalog roboczy
 WORKDIR /app
 
