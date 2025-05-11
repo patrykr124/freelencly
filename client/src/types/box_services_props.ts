@@ -10,7 +10,8 @@ export interface BoxServicesProps {
     description: string;
     revisions: number;
   }[];
-  postedBy: { name: string; id: string };
+  postedBy: { name: string; id: string, avatarUrl?: string};
+  
   taskPerHours: { hourlyRate: number }[];
   name: string;
   hourlyRate: number;
@@ -29,7 +30,7 @@ export interface BoxServicesOne{
     description: string;
     revisions: number;
   }[];
-  postedBy: { name: string; id: string };
+  postedBy: { name: string; id: string, avatarUrl?: string };
 }
 
 export interface Job {
@@ -68,5 +69,9 @@ export interface Task {
   priority: "low" | "medium" | "high";
   createdById: string;
   assignedToId: string;
+  description: string;
   dueDate: string;
+  createdAt: string;
+  freelencerId: string;
+  taskManagerOfferId: string;
 }

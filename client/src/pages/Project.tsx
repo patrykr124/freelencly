@@ -13,7 +13,7 @@ export default function Project() {
   const [active, setActive] = useState<string>();
   const { data: freelancer } = useCurrentManagment();
   const currentActive = freelancer?.find((el: Freelancer) => el.id === active);
-  console.log(freelancer)
+ 
   if (!freelancer || freelancer.length === 0) {
     return <div>No freelancers found</div>;
   }

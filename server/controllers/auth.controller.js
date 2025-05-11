@@ -4,6 +4,9 @@ const prisma = new PrismaClient();
 const { generateTokken } = require("../middleware/token");
 const { OAuth2Client } = require('google-auth-library');
 
+const DEFAULT_AVATAR = "https://api.dicebear.com/7.x/adventurer/svg?seed=default";
+
+
 const signUp = async (req, res) => {
   try {
     const { email, password,name } = req.body;
@@ -24,7 +27,8 @@ const signUp = async (req, res) => {
       data: {
         email,
         password: hashPassword,
-        name
+        name,
+        avatarUrl: DEFAULT_AVATAR,
       },
     });
     if (newUser) {
@@ -81,12 +85,20 @@ const singIn = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const {name} = req.body;
+    const {name, } = req.body;
+    let avatarUrl = req.body.avatarUrl;
     const userId = req.userId;
+    if (req.file?.path) {
+      avatarUrl = req.file.path;
+    } else if (avatarUrl) {
+      avatarUrl = avatarUrl;
+    }
     const updateUser = await prisma.user.update({
       where: {id: userId},
       data: {
+        avatarUrl: req.file?.path,
         name,
+        
       },
     })
     res.status(200).json(updateUser)
@@ -104,6 +116,7 @@ const currentUser = async (req, res) => {
         id: true,
         email: true,
         name: true,
+        avatarUrl: true,
       },
     });
     res.status(200).json({
@@ -171,6 +184,7 @@ const googleLogin = async (req, res )=>{
           email,
           name,
           password: "",
+          avatarUrl: DEFAULT_AVATAR,
           googleId: sub
         },
       })

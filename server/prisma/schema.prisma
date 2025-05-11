@@ -21,6 +21,7 @@ model User {
   AssignedTask Task[]       @relation("AssignedTask")
   Freelencer   Freelencer[]
   googleId     String?      @unique
+  avatarUrl    String?
 }
 
 // model Auth {

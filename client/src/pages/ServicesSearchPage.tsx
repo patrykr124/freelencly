@@ -3,19 +3,25 @@ import Header from "../components/UI/Header";
 import { useJobs } from "../lib/useAllJobs";
 import { BoxServicesProps } from "@/types/box_services_props";
 import BoxServices from "../components/layout/services/BoxServices";
-import { useParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
+import { useSearchTitleStore } from "../store/useSearchTitle";
 
-export default function ServicesPage() {
+
+
+export default function ServicesSearchPage() {
   const { data: jobs } = useJobs();
-  const { category } = useParams();
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get("query")?.toLowerCase() || "";
+  const selectedTitle = useSearchTitleStore((state) => state.selectedTitle)
   const filteredJobs = jobs?.filter(
-    (job: BoxServicesProps) => job.category === category
+    (job: BoxServicesProps) => job.title.toLowerCase().includes(query)
   );
+
  
-console.log(jobs)
+
   return (
     <>
-      <Header title={`${category}`} img="/img/webdev.jpg" />
+      <Header title={selectedTitle ? selectedTitle : query} img="/img/webdev.jpg" />
       <div className="wrapper">
         {filteredJobs?.length > 0 && (
           <div className="py-12">
@@ -35,7 +41,6 @@ console.log(jobs)
               title={item.title}
               packages={item.packages}
               postedBy={item.postedBy}
-              
             />
           ))}
         </div>

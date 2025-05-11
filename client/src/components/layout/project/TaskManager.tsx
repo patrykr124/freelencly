@@ -13,18 +13,29 @@ import { useAllTaskByFreelencer } from "../../../lib/useAllTaskByFreelencer";
 import { useParams } from "react-router-dom";
 import { Task } from "@/types/box_services_props";
 
+type ColumnItem = {
+  id: string;
+  title: string;
+  content: string;
+  priority: string;
+  description: string;
+  status: string;
+  createdAt: string;
+  freelencerId: string;
+  taskManagerOfferId: string;
+};
 const initialColumns = {
   todo: {
     name: "To do",
-    items: [] as { id: string; content: string }[],
+    items: [] as  ColumnItem[],
   },
   inprogress: {
     name: "In Progress",
-    items: [],
+    items: [] as  ColumnItem[],
   },
   done: {
     name: "Done",
-    items: [],
+    items: [] as  ColumnItem[],
   },
 };
 
@@ -37,7 +48,7 @@ export default function TaskManager({
   freelencerId?: string | null;
   taskManagerOfferId?: string | null;
 }) {
-  type ColumnItem = { id: string; content: string };
+
 
   type Columns = {
     todo: { name: string; items: ColumnItem[] };
@@ -48,7 +59,7 @@ export default function TaskManager({
   const [taskInput, setTaskInput] = useState("");
   const { id } = useParams();
   const { data: task, isLoading, error } = useAllTaskByFreelencer(id ?? "");
-  console.log(task);
+  const [selectedTask, setSelectedTask] = useState<ColumnItem | null>(null);
 
   function mapTasksToColumns(tasks: Task[]) {
     return {
@@ -59,7 +70,11 @@ export default function TaskManager({
           .map((t) => ({
             ...t,
             content: t.title,
-            ...t,
+            description: t.description,
+            status: t.status,
+            createdAt: t.createdAt,
+            priority: t.priority,
+
           })),
       },
       inprogress: {
@@ -69,7 +84,11 @@ export default function TaskManager({
           .map((t) => ({
             ...t,
             content: t.title,
-            ...t,
+            description: t.description,
+            status: t.status,
+            createdAt: t.createdAt,
+            priority: t.priority,
+         
           })),
       },
       done: {
@@ -79,7 +98,11 @@ export default function TaskManager({
           .map((t) => ({
             ...t,
             content: t.title,
-            ...t,
+            description: t.description,
+            status: t.status,
+            createdAt: t.createdAt,
+            priority: t.priority,
+          
           })),
       },
     };
@@ -132,6 +155,7 @@ export default function TaskManager({
 
   const addTask = useAddTaskSocket();
   const userId = useAuth((state) => state.user?.id);
+
   const handleAddTask = (e: React.FormEvent) => {
     e.preventDefault();
     if (!taskInput.trim()) return;
@@ -149,7 +173,18 @@ export default function TaskManager({
     });
     setTaskInput("");
 
-    const newTask = { id: `task-${idCounter++}`, content: taskInput };
+    const newTask = {
+      id: `task-${idCounter++}`,
+      content: taskInput,
+      priority: "low",
+      title: taskInput,
+      description: "",
+      status: "todo",
+      createdAt: new Date().toISOString(),
+      freelencerId: freelencerId || "",
+      taskManagerOfferId: taskManagerOfferId || "",
+    };
+
     setColumns((prev) => ({
       ...prev,
       todo: {
@@ -159,6 +194,8 @@ export default function TaskManager({
     }));
     setTaskInput("");
   };
+
+
 
   const openPopup = useTaskInfo((state) => state.openPopup);
 
@@ -202,7 +239,7 @@ export default function TaskManager({
                         ref={provided.innerRef}
                         {...provided.droppableProps}
                         className={`flex flex-col gap-3 min-h-[50px] ${
-                          snapshot.isDraggingOver ? "bg-white" : ""
+                          snapshot.isDraggingOver ? "" : ""
                         }`}
                       >
                         {col.items.map((item, idx) => (
@@ -212,19 +249,26 @@ export default function TaskManager({
                             index={idx}
                           >
                             {(provided, snapshot) => (
-                              <div
-                                onClick={openPopup}
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                                className={`bg-white rounded-md p-3 shadow text-black font-medium cursor-pointer transition border border-blue-200 ${
-                                  snapshot.isDragging
-                                    ? "ring-2 ring-green-600"
-                                    : ""
-                                }`}
-                              >
-                                {item.content}
-                              </div>
+                              <>
+                                <div
+                                  onClick={() => {openPopup(); setSelectedTask(item)}}
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                  className={`bg-white rounded-md p-3 shadow text-black font-medium cursor-pointer transition border border-blue-200 ${
+                                    snapshot.isDragging
+                                      ? "ring-2 ring-green-600"
+                                      : ""
+                                  }`}
+                                >
+                                  <div className="flex justify-between">
+                                    <h3>{item.content}</h3>
+                                    <p className="text-sm px-2 py-0 bg-black/15 rounded-sm w-fit">
+                                      {item.priority}
+                                    </p>
+                                  </div>
+                                </div>
+                              </>
                             )}
                           </Draggable>
                         ))}
@@ -238,7 +282,14 @@ export default function TaskManager({
           </DragDropContext>
         </div>
       </div>
-      <TaskInfo />
+      {selectedTask &&<TaskInfo
+      id={selectedTask.id}
+        title={selectedTask?.title}
+        priority={selectedTask?.priority}
+        desc={selectedTask?.description}
+        status={selectedTask?.status}
+        createdAt={selectedTask?.createdAt}
+      />}
     </>
   );
 }

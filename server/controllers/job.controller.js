@@ -80,6 +80,7 @@ const allJobs = async (req, res) => {
           select: {
             id: true,
             name: true,
+            avatarUrl: true,
           },
         },
         packages: true,
@@ -105,6 +106,7 @@ const getJobById = async (req, res) => {
           select: {
             id: true,
             name: true,
+            avatarUrl: true,
           },
         },
         packages: true,

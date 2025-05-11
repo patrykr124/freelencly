@@ -5,8 +5,9 @@ import Button from "./UI/Buttons/Button";
 import ButtonPopup from "./UI/Buttons/ButtonPopup";
 
 import { useFullUser } from "../lib/useMyData";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useJobs } from "../lib/useAllJobs";
+import { LogOut, Settings } from "lucide-react";
 
 export default function NavBar() {
   const { isAuth } = useAuth();
@@ -15,8 +16,11 @@ export default function NavBar() {
   const { pathname } = useLocation();
   const { data: job } = useJobs();
   const [showTask, setShowTask] = useState(false);
+  const [showMore, setShowMore] = useState(false);
+  const closeRefAvatar = useRef<HTMLDivElement>(null);
+
   let css = "";
-  
+
   if (pathname.includes("/project")) {
     css = " p-2 ";
   } else {
@@ -43,6 +47,28 @@ export default function NavBar() {
   function handleNavigate() {
     navigate(`/project/${job?.[0].id}`);
   }
+
+  function handleMore() {
+    setShowMore(!showMore);
+  }
+
+  useEffect(() => {
+    function click(e: MouseEvent) {
+      const target = e.target;
+      if (target && (target as HTMLElement).id === "open-popup") return;
+      if (
+        closeRefAvatar.current &&
+        !closeRefAvatar.current.contains(e.target as Node)
+      ) {
+        setShowMore(false);
+      }
+    }
+    window.addEventListener("click", click);
+
+    return () => {
+      window.removeEventListener("click", click);
+    };
+  }, []);
 
   return (
     <header
@@ -72,21 +98,51 @@ export default function NavBar() {
               Task managment
             </Button>
           )}
+          {isAuth && (
+            <Button
+              color="text-sm  link bg-white w-[150px]"
+              onClick={() => navigate("/create")}
+            >
+              Create a offer
+            </Button>
+          )}
           {isAuth ? (
-            <>
-              <Button
-                color="text-sm  link bg-white w-[150px]"
-                onClick={() => navigate("/create")}
+            <div ref={closeRefAvatar} className="relative ">
+              <img
+                src={
+                  dataUser?.user?.avatarUrl ? `http://localhost:3000/${dataUser.user.avatarUrl}` :
+                  import.meta.env.VITE_DEFAULT_AVATAR
+                }
+                alt="avatar"
+                onClick={handleMore}
+                className={`object-cover rounded-full hover:scale-95 transition-all duration-400 avatarbox cursor-pointer w-12 h-12 bg-white`}
+              ></img>
+              <div
+                className={`${
+                  showMore
+                    ? " translate-y-2 opacity-100 z-50"
+                    : " translate-y-8 opacity-0 -z-50"
+                } transition-all duration-400 absolute rounded p-4 gap-4 bg-white flex w-[150px] flex-col left-1/2 -translate-x-1/2`}
               >
-                Create a offer
-              </Button>{" "}
-              <Button onClick={() => navigate("/setting")} color="bg-white">
-                Setting
-              </Button>
-              <ButtonPopup onClick={logout} color="bg-white text-black text-sm">
-                Logout
-              </ButtonPopup>
-            </>
+                <div
+                  onClick={() => navigate("/setting")}
+                  color="bg-white"
+                  className="flex items-center gap-2 cursor-pointer hover:text-green-600"
+                >
+                  <Settings size={20} />
+                  Setting
+                </div>
+                <div
+                  id="open-popup"
+                  onClick={logout}
+                  color="bg-white text-black text-sm"
+                  className="flex items-center gap-2 hover:text-green-600 cursor-pointer"
+                >
+                  <LogOut size={20} />
+                  Logout
+                </div>
+              </div>
+            </div>
           ) : (
             <ButtonPopup
               onClick={() => togglePopup(true)}

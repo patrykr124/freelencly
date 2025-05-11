@@ -10,6 +10,7 @@ import useAuth from "./store/auth";
 import ServicesPageDetail from "./pages/ServicesPageDetail";
 import Project from "./pages/Project";
 import Edit from "./pages/Edit";
+import ServicesSearchPage from "./pages/ServicesSearchPage";
 
 function App() {
   const { init } = useAuth();
@@ -25,10 +26,10 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/create" element={<Create />} />
         <Route path="/setting" element={<Setting />} />
- 
+
         <Route path="/project/:id" element={<Project />} />
         <Route path="/edit/:id" element={<Edit />} />
-
+        <Route path="/services/all" element={<ServicesSearchPage />} />
         <Route path="/services/:category" element={<ServicesPage />} />
         <Route
           path="/services/:category/:id"

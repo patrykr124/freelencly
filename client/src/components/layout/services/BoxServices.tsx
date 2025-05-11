@@ -17,7 +17,7 @@ export default function BoxServices({id,category,img,title,packages,postedBy } :
       </div>
       <div className="bg-black/5 h-full p-2 space-y-2 justify-center flex flex-col">
         <div className="flex gap-2 items-center">
-          <div className="avatar w-6 h-6 rounded-full bg-black/20"></div>
+          <img src={`http://localhost:3000/${postedBy.avatarUrl}`} className="w-6 h-6 rounded-full bg-black/20" alt="" />
           <div className="flex gap-1">
             <p className="">By</p>
             <p className="font-semibold"> {postedBy.name}</p>
