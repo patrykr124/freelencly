@@ -76,6 +76,16 @@
     @apply !-bottom-1
   } 
 
+  .ql-toolbar.ql-snow {
+    @apply !rounded-t-xl ;
+  }
+
+  .ql-container.ql-snow {
+    @apply !rounded-b-xl ;
+  }
+
+ 
+
   /* .react-multi-carousel-item{
     @apply !w-[300px] 
   } */
@@ -87,6 +97,12 @@
 
 .react-multiple-carousel__arrow--left{
   left: calc(1% - 10px) !important;
+}
+
+.nsm7Bb-HzV7m-LgbsSe .jVeSEe .i5vt6e-Ia7Qfc .uaxL4e-RbRzK{
+ background-color: red !important;
+ border-radius: 10px !important;
+ box-shadow: 10px black !important;
 }
 
 :root {

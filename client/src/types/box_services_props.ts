@@ -75,3 +75,9 @@ export interface Task {
   freelencerId: string;
   taskManagerOfferId: string;
 }
+
+export interface ErrorWithResponse {
+  response?: {
+    status?: number;
+  };
+};

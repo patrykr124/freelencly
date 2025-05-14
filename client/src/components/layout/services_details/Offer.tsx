@@ -1,8 +1,11 @@
 import useAuth from "../../../store/auth";
 import { useManagmentTask } from "../../../lib/useManagmentTask";
-import { Job } from "@/types/box_services_props";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Job } from "@/types/box_services_props";
+import closePopup from "../../../store/closePopup";
+import ButtonPopup from "../../UI/Buttons/ButtonPopup";
+
 
 export default function Offer({ job }: Job) {
   const [active, setActive] = useState<number>(1);
@@ -10,6 +13,7 @@ export default function Offer({ job }: Job) {
   const navigate = useNavigate();
   const { token } = useAuth();
   const managmentFreelencer = useManagmentTask(token ?? "");
+  const togglePopup = closePopup((state) => state.togglePopup);
   function handleManagmentFreelencer() {
     managmentFreelencer.mutate(
       {
@@ -25,13 +29,15 @@ export default function Offer({ job }: Job) {
         },
 
         onError: (error) => {
+          
           console.error("Błąd w create.tsx", error);
         },
       }
     );
   }
 
-  const cssBox = " flex gap-3  flex-col justify-between w-full h-full min-h-[150px] ";
+  const cssBox =
+    " flex gap-3  flex-col justify-between w-full h-full min-h-[150px] ";
 
   return (
     <div className="">
@@ -62,7 +68,7 @@ export default function Offer({ job }: Job) {
             <p>PREMIUM</p>
           </div>
         </div>
-        <div className="p-3 justify-center   mt-2 relative flex flex-col min-h-[150px] ">
+        <div className="p-2 justify-center   mt-2 relative flex flex-col min-h-[150px] ">
           {active === 1 && (
             <div className={`${cssBox}`}>
               <div className="desc">
@@ -82,9 +88,11 @@ export default function Offer({ job }: Job) {
                 </div>
               </div>
               <div className="w-full flex justify-center flex-col gap-1.5">
-                <button className="link bg-black text-white">
-                  Send a message
-                </button>
+              <ButtonPopup onClick={() => {
+                togglePopup(true);
+              }} color="link bg-black w-full h-11 text-white">
+                Send a message
+              </ButtonPopup>
               </div>
             </div>
           )}
@@ -106,9 +114,11 @@ export default function Offer({ job }: Job) {
                   </p>
                 </div>
               </div>
-              <button className="link bg-black text-white">
+              <ButtonPopup onClick={() => {
+                togglePopup(true);
+              }} color="link bg-black w-full h-11 text-white">
                 Send a message
-              </button>
+              </ButtonPopup>
             </div>
           )}
           {active === 3 && (
@@ -129,9 +139,11 @@ export default function Offer({ job }: Job) {
                   </p>
                 </div>
               </div>
-              <button className="link bg-black text-white">
+              <ButtonPopup onClick={() => {
+                togglePopup(true);
+              }} color="link bg-black w-full h-11 text-white">
                 Send a message
-              </button>
+              </ButtonPopup>
             </div>
           )}
         </div>

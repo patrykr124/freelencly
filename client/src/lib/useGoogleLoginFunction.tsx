@@ -2,7 +2,7 @@ import useAuth from "../store/auth";
 import closePopup from "../store/closePopup";
 import { useMutation } from "@tanstack/react-query";
 
-export function useGoogleLogin() {
+export function useGoogleLoginFunction() {
   const logout = useAuth((state) => state.logout);
   const togglePopup = closePopup((state) => state.togglePopup);
 

@@ -32,7 +32,6 @@ export default function NavBar() {
   function logout() {
     logOut();
     togglePopup(false);
-
     navigate("/");
     window.location.reload();
   }

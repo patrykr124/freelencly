@@ -9,6 +9,7 @@ export default function Popup() {
   const { isPopup, togglePopup } = closePopup();
   const [showSigninEmail, setShowSigninEmail] = useState(false);
   const [loginPage, setLoginPage] = useState(false);
+
   function handleLoginPage(e: React.MouseEvent) {
     e.stopPropagation();
     setLoginPage(!loginPage);
@@ -24,7 +25,6 @@ export default function Popup() {
       }
     }
     window.addEventListener("click", click);
-
     return () => {
       window.removeEventListener("click", click);
     };
