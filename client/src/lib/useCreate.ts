@@ -18,9 +18,11 @@ export type Input = {
   img?: File;
   technologySelected: string;
   servicesPerHourPrice: number | undefined;
+
 };
 
 export function useCreateJob(token: string) {
+  const API_URL = import.meta.env.VITE_API_URL;
   const logout = useAuth((state) => state.logout);
   const togglePopup = closePopup((state) => state.togglePopup);
   return useMutation({
@@ -44,7 +46,7 @@ export function useCreateJob(token: string) {
         formData.append("img", input.img);
       }
 
-      const res = await fetch("http://localhost:3000/job/create", {
+      const res = await fetch(`${API_URL}/job/create`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

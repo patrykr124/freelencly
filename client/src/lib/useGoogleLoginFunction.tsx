@@ -5,10 +5,11 @@ import { useMutation } from "@tanstack/react-query";
 export function useGoogleLoginFunction() {
   const logout = useAuth((state) => state.logout);
   const togglePopup = closePopup((state) => state.togglePopup);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   return useMutation({
     mutationFn: async (credential: string) => {
-      const res = await fetch("http://localhost:3000/user/google-login", {
+      const res = await fetch(`${API_URL}/user/google-login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

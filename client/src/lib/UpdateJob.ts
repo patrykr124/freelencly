@@ -26,7 +26,7 @@ export function useUpdateJob(token: string, jobId: string) {
               formData.append("img", input.img);
             }
         
-        const res = await fetch(`http://localhost:3000/job/edit/${jobId}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/job/edit/${jobId}`, {
           method: "PUT",
           headers: {
             Authorization: `Bearer ${token}`,
