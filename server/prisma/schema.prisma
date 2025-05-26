@@ -45,6 +45,7 @@ model Job {
   Order        Order[]
   packages     JobPackage[]       @relation("JobToPackages")
   taskPerHours TaskManagerOffer[] @relation("perHours")
+  technologies Technology[]       @relation("JobTechnologies")
 }
 
 model Freelencer {
@@ -101,6 +102,12 @@ model Task {
   freelencerId       String?
   TaskManagerOffer   TaskManagerOffer? @relation(fields: [taskManagerOfferId], references: [id])
   taskManagerOfferId String?
+}
+
+model Technology {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  jobs Job[]  @relation("JobTechnologies")
 }
 
 enum TaskStatus {

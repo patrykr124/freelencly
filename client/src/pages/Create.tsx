@@ -1,6 +1,6 @@
 import Header from "../components/UI/Header";
 import { Image, ScanLineIcon } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ImageUpload from "../components/UI/ImageUpload";
 import Select from "../components/UI/Select";
@@ -8,6 +8,8 @@ import { useCreateJob, type Input } from "../lib/useCreate";
 import useAuth from "../store/auth";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
+import SelectTechnology from "../components/UI/SelectTechnology";
+import { useAllTechnology } from "../lib/useAllTechnology";
 
 export default function Create() {
   const [title, setTitle] = useState("");
@@ -30,13 +32,20 @@ export default function Create() {
   const [servicesPerHour, setServicesPerHour] = useState("yes");
   const [servicesPerHourPrice, setServicesPerHourPrice] = useState(0);
   const navigate = useNavigate();
+  const { data: technology } = useAllTechnology();
+  const [technologySelected, setTechnologySelected] = useState("");
+
+  useEffect(() => {
+    if (technology?.length > 0) {
+      setTechnologySelected(technology[0].name);
+    }
+  }, [technology]);
 
   const { token } = useAuth();
   const createJob = useCreateJob(token ?? "");
 
   function handleSend(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log("Hi");
     const input: Input = {
       title,
       img,
@@ -52,6 +61,7 @@ export default function Create() {
       premiumRevision,
       premiumDesc,
       servicesPerHourPrice,
+      technologySelected,
     };
     createJob.mutate(input, {
       onSuccess: (data) => {
@@ -132,6 +142,10 @@ export default function Create() {
             <ReactQuill theme="snow" value={description} onChange={setDesc} />
           </div>
           <Select category={category} setCategory={setCategory} />
+          <SelectTechnology technology={technology}
+            technologySelected={technologySelected}
+            setTechnologySelected={setTechnologySelected}
+          />
           <div className="flex gap-4">
             <div className="jobPackage">
               <div className="space-y-4">

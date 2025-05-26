@@ -1,51 +1,80 @@
-import { BiLogoJavascript } from "react-icons/bi";
-import { FaReact, FaWordpress } from "react-icons/fa";
+import { Figma } from "lucide-react";
+import { BiLogoAdobe, BiLogoJavascript } from "react-icons/bi";
+import { FaAngular, FaHtml5, FaJava, FaPython, FaReact, FaVuejs, FaWordpress } from "react-icons/fa";
 
 export const technologyData = [
     {
         id: 1,
-        name: 'React',
-        icon: <FaWordpress/>
+        name: 'Wordpress',
+        icon: <FaWordpress/>,
+        categories: ['web_development']
     },
     {
         id: 2,
         name: 'React',
-        icon: <FaReact/>
+        icon: <FaReact/>,
+        categories: ['web_development', 'mobile_development']
     },
     {
         id: 3,
-        name: 'React',
-        icon: <BiLogoJavascript/>
+        name: 'JavaScript',
+        icon: <BiLogoJavascript/>,
+        categories: ['web_development']
     },
     {
         id: 4,
-        name: 'React',
-        icon: <FaWordpress/>
+        name: 'Vue',
+        icon: <FaVuejs/>,
+        categories: ['web_development']
     },
     {
         id: 5,
-        name: 'React',
-        icon: <FaWordpress/>
+        name: 'HTML',
+        icon: <FaHtml5/>,
+        categories: ['web_development']
     },
     {
         id: 6,
-        name: 'React',
-        icon: <FaWordpress/>
+        name: 'Java',
+        icon: <FaJava/>,
+        categories: ['web_development', 'mobile_development']
     },
     {
         id: 7,
-        name: 'React',
-        icon: <FaWordpress/>
+        name: 'Python',
+        icon: <FaPython/>,
+        categories: ['web_development']
     },
     {
         id: 8,
-        name: 'React',
-        icon: <FaWordpress/>
+        name: 'Angular',
+        icon: <FaAngular/>,
+        categories: ['web_development']
     },
+    // UI/UX
     {
         id: 9,
-        name: 'React',
-        icon: <FaWordpress/>
+        name: 'Figma',
+        icon: <Figma/>,
+        categories: ['ui_ux_design']
     },
-
-]
+    {
+        id: 10,
+        name: 'Adobe XD',
+        icon: <BiLogoAdobe/>,
+        categories: ['ui_ux_design']
+    },
+    // Graphic Design
+    {
+        id: 11,
+        name: 'Photoshop',
+        icon: <BiLogoAdobe/>,
+        categories: ['graphic_design']
+    },
+    {
+        id: 12,
+        name: 'Illustrator',
+        icon: <BiLogoAdobe/>,
+        categories: ['graphic_design']
+    },
+];

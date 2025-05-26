@@ -16,6 +16,7 @@ export type Input = {
   premiumRevision: number;
   premiumDesc: string;
   img?: File;
+  technologySelected: string;
   servicesPerHourPrice: number | undefined;
 };
 
@@ -38,6 +39,7 @@ export function useCreateJob(token: string) {
       formData.append("premiumRevision", String(input.premiumRevision));
       formData.append("premiumDesc", input.premiumDesc);
       formData.append("servicesPerHourPrice", String(input.servicesPerHourPrice));
+      formData.append("technologySelected", input.technologySelected);
       if (input.img) {
         formData.append("img", input.img);
       }

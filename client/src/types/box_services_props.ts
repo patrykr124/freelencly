@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export interface BoxServicesProps {
   id: string;
   category: string;
@@ -81,3 +83,10 @@ export interface ErrorWithResponse {
     status?: number;
   };
 };
+
+export interface Technology {
+  id:number;
+  name: string;
+  icon: ReactNode;
+  categories: string[];
+}

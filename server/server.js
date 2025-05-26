@@ -10,6 +10,7 @@ const { Server } = require("socket.io");
 const { PrismaClient } = require("@prisma/client");
 const server = http.createServer(app);
 const socketHandler = require("./socket/socketHandler");
+const technologyRoutes = require("./routers/technology.routes");
 const io = new Server(server, {
     cors: {
         origin: "*",
@@ -30,6 +31,7 @@ app.use("/uploads", express.static("uploads"));
 app.use("/user", userRoutes);
 app.use("/job", jobRoutes);
 app.use("/task", taskRoutes);
+app.use("/technology", technologyRoutes);
 
 socketHandler(io, prisma);
 
