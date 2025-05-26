@@ -10,6 +10,7 @@ import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 import { useUpdateJob } from "../lib/UpdateJob";
 import { useCurrentJobs } from "../lib/useCurrentJob";
+import { useAllTechnology } from "../lib/useAllTechnology";
 
 export default function Edit() {
   const [title, setTitle] = useState("");
@@ -36,7 +37,14 @@ export default function Edit() {
   const { data: job } = useCurrentJobs(id);
   const { token } = useAuth();
   const createJob = useUpdateJob(token ?? "", id ?? "");
-  console.log(job)
+  const { data: technology } = useAllTechnology();
+   const [technologySelected, setTechnologySelected] = useState("");
+
+   useEffect(() => {
+    if (technology?.length > 0) {
+      setTechnologySelected(technology[0].name);
+    }
+  }, [technology]);
 
   useEffect(() => {
     if(job){
@@ -89,6 +97,8 @@ export default function Edit() {
       premiumRevision,
       premiumDesc,
       servicesPerHourPrice,
+      technologySelected,
+      
     };
     createJob.mutate(input, {
       onSuccess: (data) => {
