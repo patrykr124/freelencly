@@ -1,29 +1,37 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { useMutation } from "@tanstack/react-query";
+export function useUpdateTaskDesc(jobId: string | number, userId: string | undefined) {
+  const token = localStorage.getItem("token");
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      taskId,
+      description,
+    }: {
+      taskId: string;
+      description: string;
+    }) => {
+      const res = await fetch(`http://localhost:3000/task/update`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
 
-export function useUpdateTaskDesc() { 
-    return useMutation({
-        mutationFn: async({
-            taskId,
-            description
-        } : {
-            taskId: string,
-            description: string
-        }) => {
-            const res = await fetch(`http://localhost:3000/tasks/${taskId}`, {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ description }),
-            });
+        body: JSON.stringify({ taskId, description }),
+      });
 
-            if (!res.ok) {
-                const error = await res.json();
-                throw new Error(error.message);
-            }
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message);
+      }
 
-            return res.json();
-        }
-    })
+      return res.json();
+    },
+    onSuccess: () => {
+        queryClient.invalidateQueries({
+            queryKey: ["allTaskByFreelencer", jobId, userId],
+          });
+      }
+  });
 }

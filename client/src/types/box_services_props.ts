@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export interface BoxServicesProps {
   id: string;
   category: string;
@@ -74,4 +76,17 @@ export interface Task {
   createdAt: string;
   freelencerId: string;
   taskManagerOfferId: string;
+}
+
+export interface ErrorWithResponse {
+  response?: {
+    status?: number;
+  };
+};
+
+export interface Technology {
+  id:number;
+  name: string;
+  icon: ReactNode;
+  categories: string[];
 }

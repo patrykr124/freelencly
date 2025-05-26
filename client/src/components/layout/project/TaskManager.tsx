@@ -60,7 +60,7 @@ export default function TaskManager({
   const { id } = useParams();
   const { data: task, isLoading, error } = useAllTaskByFreelencer(id ?? "");
   const [selectedTask, setSelectedTask] = useState<ColumnItem | null>(null);
-
+  
   function mapTasksToColumns(tasks: Task[]) {
     return {
       todo: {
@@ -283,7 +283,7 @@ export default function TaskManager({
         </div>
       </div>
       {selectedTask &&<TaskInfo
-      id={selectedTask.id}
+        id={selectedTask.id}
         title={selectedTask?.title}
         priority={selectedTask?.priority}
         desc={selectedTask?.description}

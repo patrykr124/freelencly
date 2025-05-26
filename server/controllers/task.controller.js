@@ -61,7 +61,26 @@ const getAllTaskByFreelencer = async (req, res) => {
   }
 };
 
+const updateTask = async (req, res) => {
+
+  const { taskId, description } = req.body;
+
+  try {
+    const task = await prisma.task.update({
+      where: {
+        id: taskId,
+      },
+      data: {
+        description,
+      },
+    });
+    res.status(200).json(task);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   createFreelencerManagment,
-  getFreelencerManagment,getAllTaskByFreelencer
+  getFreelencerManagment,getAllTaskByFreelencer,updateTask
 };

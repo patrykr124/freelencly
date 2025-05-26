@@ -9,7 +9,9 @@ export default function Header() {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
   const { data: jobs } = useJobs();
- const setSelectedTitle = useSearchTitleStore((state) => state.setSelectedTitle)
+  const setSelectedTitle = useSearchTitleStore(
+    (state) => state.setSelectedTitle
+  );
 
   const suggest =
     search.length > 0
@@ -79,14 +81,17 @@ export default function Header() {
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                onKeyDown={(e) => {if(e.key === "Enter") {navigate(`/services/all?query=${search}`)}}}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    navigate(`/services/all?query=${search}`);
+                  }
+                }}
                 className="outline-none  text-black w-full border-none  px-4 py-3 rounded-2xl"
                 placeholder="Search in your location"
               />
               <div className=" absolute top-[50%] translate-y-[-50%] right-1.5 bg-black hover:bg-black/85 transition-all duration-200 cursor-pointer  p-3 rounded-lg">
                 <BsSearch size={20} color="white" />
               </div>
-              {suggest.length > 0 && <hr />}
             </div>
 
             {suggest.length > 0 && (
@@ -95,9 +100,9 @@ export default function Header() {
                   <div
                     onClick={() => handleSearch(item)}
                     key={item.id}
-                    className="py-2 px-4 cursor-pointer hover:font-semibold"
+                    className="py-2 border-t-1 border-gray-200 w-full px-4 cursor-pointer hover:font-semibold"
                   >
-                    <div>
+                    <div className=" ">
                       <p className="text-black">{item.title}</p>
                     </div>
                   </div>

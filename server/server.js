@@ -10,6 +10,8 @@ const { Server } = require("socket.io");
 const { PrismaClient } = require("@prisma/client");
 const server = http.createServer(app);
 const socketHandler = require("./socket/socketHandler");
+const technologyRoutes = require("./routers/technology.routes");
+const PORT = process.env.PORT || 3000;
 const io = new Server(server, {
     cors: {
         origin: "*",
@@ -30,9 +32,10 @@ app.use("/uploads", express.static("uploads"));
 app.use("/user", userRoutes);
 app.use("/job", jobRoutes);
 app.use("/task", taskRoutes);
+app.use("/technology", technologyRoutes);
 
 socketHandler(io, prisma);
 
-server.listen(3000, () => {
+server.listen(PORT, () => {
   console.log("Server is running on port 3000");
 });

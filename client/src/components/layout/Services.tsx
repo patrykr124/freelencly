@@ -25,7 +25,8 @@ export default function Services() {
     },
   };
 
-  const { data: jobs } = useJobs();
+  const { data: jobs, error } = useJobs();
+
   return (
     <section className="color wrapper py-20">
       <div className=" ">
@@ -37,7 +38,7 @@ export default function Services() {
             showDots={true}
             ssr={true}
           >
-            {jobs?.map((item: BoxServicesProps) => (
+            {jobs.map((item: BoxServicesProps) => (
               <BoxServices
                 key={item.id}
                 id={item.id}
@@ -49,6 +50,7 @@ export default function Services() {
                 postedBy={item.postedBy}
               />
             ))}
+            {error && <p>Dont have any offers</p>}
           </Carousel>
         )}
       </div>
