@@ -14,7 +14,7 @@ export default function Setting() {
   const [avatar, setAvatar] = useState<File | null>(null);
   const uploadAvatar = useUploadAvatar(token ?? "");
   const fileInputClick = useRef<HTMLInputElement>(null);
-
+  const avatarPreview = avatar ? URL.createObjectURL(avatar) : "";
 
   function handleAvatar(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -36,6 +36,12 @@ export default function Setting() {
     }
     updateUser.mutate(name);
   }
+
+  const rawAvatar = currentUser?.user?.avatarUrl?.replace(/\\/g, "/") || "";
+  const avatarUrl = `${import.meta.env.VITE_API_URL}${
+    rawAvatar.startsWith("/") ? "" : "/"
+  }${rawAvatar}`;
+ 
   return (
     <div className="flex flex-col items-center justify-center">
       <Header title="Settings" img="/img/webdev.jpg" />
@@ -56,8 +62,10 @@ export default function Setting() {
               <img
                 className="rounded-full object-cover bg-black/20 w-20 h-20 cursor-pointer"
                 src={
-                  currentUser?.user?.avatarUrl
-                    ? `http://localhost:3000/${currentUser.user.avatarUrl}`
+                  avatarPreview
+                    ? avatarPreview
+                    : avatarUrl
+                    ? avatarUrl
                     : import.meta.env.VITE_DEFAULT_AVATAR
                 }
               />
@@ -76,15 +84,16 @@ export default function Setting() {
           <label className="mb-0" htmlFor="name">
             Change name
           </label>
-          <input
+          
+            <input
             className=""
-            placeholder={currentUser?.user?.name}
+            placeholder={currentUser?.user?.name ? currentUser?.user?.name : "Write a name"}
             value={name}
             onChange={(e) => setName(e.target.value)}
             type="text"
             name="name"
             id="name"
-          />
+          /> 
           <button
             type="submit"
             className="bg-black w-full text-white px-12 py-3 rounded-xl cursor-pointer"

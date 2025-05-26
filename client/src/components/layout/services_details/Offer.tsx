@@ -40,8 +40,8 @@ export default function Offer({ job }: Job) {
     " flex gap-3  flex-col justify-between w-full h-full min-h-[150px] ";
 
   return (
-    <div className="">
-      <div className="rounded overflow-hidden -mt-40 z-[9] bg-white  min-h-[200px] sticky top-20 ">
+    <div className="h-screen sticky top-40">
+      <div className="rounded overflow-hidden -mt-40 z-[9] bg-white  min-h-[200px]  ">
         <div className="flex items-center justify-around">
           <div
             onClick={() => setActive(1)}
@@ -68,7 +68,7 @@ export default function Offer({ job }: Job) {
             <p>PREMIUM</p>
           </div>
         </div>
-        <div className="p-2 justify-center   mt-2 relative flex flex-col min-h-[150px] ">
+        <div className="p-4 justify-center   mt-2 relative flex flex-col min-h-[150px] ">
           {active === 1 && (
             <div className={`${cssBox}`}>
               <div className="desc">
@@ -148,7 +148,7 @@ export default function Offer({ job }: Job) {
           )}
         </div>
       </div>
-      <div className="border-[1px] p-2  bg-white shadow-xl border-black/20 rounded-md sticky mt-2 ">
+      <div className="border-[1px] p-4  bg-white shadow-xl border-black/20 rounded-md sticky bottom-0 mt-2 ">
         {job?.taskPerHours[0] && (
           <>
             <button

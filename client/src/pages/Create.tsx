@@ -34,7 +34,7 @@ export default function Create() {
   const navigate = useNavigate();
   const { data: technology } = useAllTechnology();
   const [technologySelected, setTechnologySelected] = useState("");
-
+  console.log(technology)
   useEffect(() => {
     if (technology?.length > 0) {
       setTechnologySelected(technology[0].name);
