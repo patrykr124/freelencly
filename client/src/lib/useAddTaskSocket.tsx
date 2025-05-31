@@ -2,7 +2,7 @@ import { TaskInput } from "@/types/box_services_props";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:3000");
+const socket = io(`${import.meta.env.VITE_API_URL}`);
 
 type TaskResponse = { error?: string } & { [key: string]: undefined };
 

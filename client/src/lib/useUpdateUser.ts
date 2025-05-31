@@ -7,9 +7,11 @@ import { useMutation } from "@tanstack/react-query";
 export function useUpdateUser(token: string) {
   const logout = useAuth((state) => state.logout);
   const togglePopup = closePopup((state) => state.togglePopup);
+  const API_URL = import.meta.env.VITE_API_URL;
+
   return useMutation({
     mutationFn: async (name: string) => {
-      const res = await fetch("http://localhost:3000/user/update", {
+      const res = await fetch(`${API_URL}/user/update`, {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,

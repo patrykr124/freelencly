@@ -18,7 +18,7 @@ export default function NavBar() {
   const [showTask, setShowTask] = useState(false);
   const [showMore, setShowMore] = useState(false);
   const closeRefAvatar = useRef<HTMLDivElement>(null);
-
+  const { data: dataUser } = useFullUser();
   let css = "";
 
   if (pathname.includes("/project")) {
@@ -36,7 +36,6 @@ export default function NavBar() {
     window.location.reload();
   }
 
-  const { data: dataUser } = useFullUser();
   useEffect(() => {
     if (dataUser?.user && dataUser.user?.CreatedTask.length > 0) {
       setShowTask(true);
@@ -68,7 +67,10 @@ export default function NavBar() {
       window.removeEventListener("click", click);
     };
   }, []);
-
+  const rawAvatar = dataUser?.user?.avatarUrl || ""
+  const normalizedAvatarUrl = rawAvatar.replace(/\\/g, "/")
+  const fullAvatarUrl = `${import.meta.env.VITE_API_URL}${normalizedAvatarUrl.startsWith("/") ? "" : "/"}${normalizedAvatarUrl}`;
+  
   return (
     <header
       className={` bg-black  transition-all duration-150 fixed z-[99999] top-0 w-full h-16 py-0 flex items-center justify-center`}
@@ -109,8 +111,9 @@ export default function NavBar() {
             <div ref={closeRefAvatar} className="relative ">
               <img
                 src={
-                  dataUser?.user?.avatarUrl ? `http://localhost:3000/${dataUser.user.avatarUrl}` :
-                  import.meta.env.VITE_DEFAULT_AVATAR
+                  dataUser?.user?.avatarUrl
+                    ? fullAvatarUrl
+                    : import.meta.env.VITE_DEFAULT_AVATAR
                 }
                 alt="avatar"
                 onClick={handleMore}

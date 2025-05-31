@@ -22,7 +22,7 @@ export default function Review() {
   };
   return (
     <div className="pb-10">
-      <h3 className="text-2xl font-semibold mb-4">What people loved about this freelancer</h3>
+      <h3 className="text-xl font-medium mb-4">What people loved about this freelancer</h3>
       <Carousel className="review py-6" responsive={responsive} showDots={true} ssr={true}>
         <div className="rounded shadow-sm gap-4 flex items-center p-4  w-full h-[140px] ">
           <img className="min-w-12 h-12 bg-black rounded-full" />

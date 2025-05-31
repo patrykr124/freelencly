@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function useUpdateTaskDesc(jobId: string | number, userId: string | undefined) {
   const token = localStorage.getItem("token");
+  const API_URL = import.meta.env.VITE_API_URL;
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({
@@ -11,7 +12,7 @@ export function useUpdateTaskDesc(jobId: string | number, userId: string | undef
       taskId: string;
       description: string;
     }) => {
-      const res = await fetch(`http://localhost:3000/task/update`, {
+      const res = await fetch(`${API_URL}/task/update`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

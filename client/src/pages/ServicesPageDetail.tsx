@@ -22,7 +22,7 @@ export default function ServicesPageDetail() {
           <div className="wrapper details grid grid-cols-3 gap-12 py-20 ">
             <div className="col-span-2 gap-6 flex flex-col ">
               <Avatar job={job} />
-              <h2 className="text-4xl font-semibold mt-8">{job?.title}</h2>
+              <h2 className="text-4xl font-semibold ">{job?.title}</h2>
               <div className=""></div>
               <div className="review">
                 <Review />

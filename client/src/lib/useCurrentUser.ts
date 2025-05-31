@@ -6,13 +6,13 @@ export function useCurrentUser(token: string) {
   
   const logout = useAuth((state) => state.logout);
   const togglePopup = closePopup((state) => state.togglePopup);
-
+  const API_URL = import.meta.env.VITE_API_URL;
 
   return useQuery({
     queryKey: ["currentUser"],
     enabled: !!token,
     queryFn: async () => {
-      const res = await fetch("http://localhost:3000/user/currentUser", {
+      const res = await fetch(`${API_URL}/user/currentUser`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

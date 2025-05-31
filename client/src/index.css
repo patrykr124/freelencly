@@ -99,6 +99,10 @@
   left: calc(1% - 10px) !important;
 }
 
+.ql-editor{
+  height: 250px !important;
+}
+
 .nsm7Bb-HzV7m-LgbsSe .jVeSEe .i5vt6e-Ia7Qfc .uaxL4e-RbRzK{
  background-color: red !important;
  border-radius: 10px !important;

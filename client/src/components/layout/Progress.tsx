@@ -2,7 +2,7 @@ import { LineCharts } from "../UI/LineCharts";
 
 export default function Progress() {
   return (
-    <section className="py-20">
+    <section className="py-20 bg-gray-100">
         <div className="wrapper flex gap-12">
             <div className="w-1/2">
                 <LineCharts/>

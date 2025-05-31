@@ -9,7 +9,7 @@ export function useUploadAvatar(token: string) {
       formData.append("avatar", avatarFile);
       formData.append("name", name);
 
-      const response = await fetch("http://localhost:3000/user/update", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/user/update`, {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,

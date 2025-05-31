@@ -15,10 +15,11 @@ type SingUp = {
 
 
 export function useSignUp() {
+  const API_URL = import.meta.env.VITE_API_URL;
   
   return useMutation({
     mutationFn: async ({ email, password,name }: SingUp) => {
-      const res = await fetch("http://localhost:3000/user/auth", {
+      const res = await fetch(`${API_URL}/user/auth`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
