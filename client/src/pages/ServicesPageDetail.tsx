@@ -18,7 +18,7 @@ export default function ServicesPageDetail() {
         </div>
       ) : (
         <div>
-          <Header title="" img={`http://localhost:3000/uploads/${job?.img}`} />
+          <Header title="" img={`${import.meta.env.VITE_API_URL}/uploads/${job?.img}`} />
           <div className="wrapper details grid grid-cols-3 gap-12 py-20 ">
             <div className="col-span-2 gap-6 flex flex-col ">
               <Avatar job={job} />
