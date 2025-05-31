@@ -10,7 +10,6 @@ export default function Home() {
     <div className="">
       <Header />
       <AllServices />
-      
       <Services />
       <hr />
       <About />
