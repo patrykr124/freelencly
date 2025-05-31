@@ -14,6 +14,7 @@ export default function BoxServices({id,category,img,title,packages,postedBy } :
           className="w-full h-[180px]  object-cover object-center"
           alt="bg_img"
         />
+        
       </div>
       <div className="bg-black/5 h-full p-2 space-y-2 justify-center flex flex-col">
         <div className="flex gap-2 items-center">
